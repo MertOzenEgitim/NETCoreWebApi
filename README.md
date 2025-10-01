@@ -45,3 +45,10 @@
 * * HTTP metodu (GET, POST, PUT, DELETE)
 * * Route şablonu (sabit/dinamik segmentler)
 * * Parametre tipleri (constraint varsa)
+## 
+* Model binding kaynakları (route, query, body)
+* [FromBody], [FromRoute], [FromQuery]
+* Validation: [Required], [Range], [StringLength], [EmailAddress]
+* Otomatik 400 BadRequest dönüşü
+
+
