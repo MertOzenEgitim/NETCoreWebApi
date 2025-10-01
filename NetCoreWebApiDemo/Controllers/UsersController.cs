@@ -80,7 +80,7 @@ namespace NetCoreWebApiDemo.Controllers
         public IActionResult List() => Ok("Ürünler");
         //sabit route
         //api/users/about
-        [HttpGet("/about")]
+        [HttpGet("about")]
         public IActionResult About() => Ok("Hakkında Bilgisi");
 
         //opsiyonel parametre
