@@ -1,10 +1,10 @@
 # .NET Core Web API
-## Giriş ve Tanımlar
+## 1-Giriş ve Tanımlar
 * .NET Framework → .NET Core → .NET 5/6/7/8
 * ASP.NET Core nedir?
 * *Web API nedir, REST nedir? JSON vs XML
 * *MVC vs Web API farkı
-## Merhaba .NET Core Web API
+## 2-Merhaba .NET Core Web API
 * IIS vs Kestrel
 * * IIS (Internet Information Services) ASP.NET Core için ne yapar?
 * * Reverse Proxy Nedir?
@@ -33,7 +33,7 @@
 * IIS Üzerinde Yayına Alma
 * * IIS Kurulumu
 * * IIS’te yeni site ekleme 
-## Routing ve Controller Mantığı
+## 3-Routing ve Controller Mantığı
 * [ApiController], [Route("api/[controller]")]
 * [HttpGet], [HttpPost], [HttpPut], [HttpDelete]
 * Route parametreleri ve query string
@@ -45,10 +45,20 @@
 * * HTTP metodu (GET, POST, PUT, DELETE)
 * * Route şablonu (sabit/dinamik segmentler)
 * * Parametre tipleri (constraint varsa)
-## 
+## 4-Model Binding & Validation
 * Model binding kaynakları (route, query, body)
 * [FromBody], [FromRoute], [FromQuery]
 * Validation: [Required], [Range], [StringLength], [EmailAddress]
 * Otomatik 400 BadRequest dönüşü
+## 5-Middleware Pipeline
+* Middleware nedir, request → response akışı nasıl işler?
+* Built-in middleware’ler: 
+* UseHttpsRedirection
+* * UseRouting
+* * UseCors
+* * UseAuthentication
+* * UseAuthorization
+* Custom middleware yazımı (request loglama örneği)
+* Uygulama: Request path’i ve süreyi loglayan middleware
 
 
