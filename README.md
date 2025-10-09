@@ -60,5 +60,19 @@
 * * UseAuthorization
 * Custom middleware yazımı (request loglama örneği)
 * Uygulama: Request path’i ve süreyi loglayan middleware
+## 6-Dependency Injection
+* DI Nedir, IoC Nedir, IoC Container Nedir, Neden Kullanılır?
+* * Bağımlılık kavramı
+* * new vs enjekte etme farkı
+* IoC (DI) Container Mantığı
+* * ASP.NET Core’da gömülü IoC container
+* * builder.Services.AddScoped örneği
+* Lifetime Türleri
+* * Transient / Scoped / Singleton
+* * Örnek GUID servisi
+* Injection Türleri
+* * Constructor, Method, Property Injection
+* Dikkat Edilmesi Gerekenler
+* * Thread Safe 
 
 
