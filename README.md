@@ -74,5 +74,12 @@
 * * Constructor, Method, Property Injection
 * Dikkat Edilmesi Gerekenler
 * * Thread Safe 
+## 7-Entity Framework Core ile Veritabanı
+* EF Core Neden kullanılır? Kurulumu nasıl yapılır?
+* DbContext & DbSet tanımı
+* Repository ve Service Yapısı
+* CRUD işlemleri
+* Connection string’i appsettings’ten almak
+* Migration → Database update
 
 
