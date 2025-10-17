@@ -28,6 +28,10 @@ namespace NetCoreWebApiDemo.Repository
         {
             return _dbSet.AsEnumerable();
         }
+        public IQueryable<T> GetAllQueryable()
+        {
+            return _dbSet.AsNoTracking();
+        }
 
         public T? GetById(int id)
         {

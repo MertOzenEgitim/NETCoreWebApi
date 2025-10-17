@@ -10,5 +10,6 @@ namespace NetCoreWebApiDemo.Services
         void Add(Product product);
         void Update(int id,Product product);
         void Delete(int id);
+        Result<Product> GetPagedFilteredSorted(int page, int pageSize, string? sort, string? search);
     }
 }
