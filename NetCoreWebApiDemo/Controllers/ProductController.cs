@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NetCoreWebApiDemo.Models;
+using NetCoreWebApiDemo.Models.Product;
 using NetCoreWebApiDemo.Services;
 
 namespace NetCoreWebApiDemo.Controllers
@@ -11,6 +12,7 @@ namespace NetCoreWebApiDemo.Controllers
     public class ProductController : ControllerBase
     {
        private readonly IProductService _productService;
+        
 
         public ProductController(IProductService productService)
         {
@@ -29,6 +31,22 @@ namespace NetCoreWebApiDemo.Controllers
                 return BadRequest();
             }            
         }
+        [HttpGet("GetAllFiltered")]
+        public IActionResult GetAllFiltered(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? sort = null,
+            [FromQuery] string? search = null)
+        {
+            try
+            {
+                return Ok(_productService.GetPagedFilteredSorted(page, pageSize, sort, search));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -45,12 +63,12 @@ namespace NetCoreWebApiDemo.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(Product product)
+        public IActionResult Add(ProductSaveDto product)
         {
             try
             {
                 _productService.Add(product);
-                return CreatedAtAction(nameof(GetById), new {id=product.Id},product);
+                return CreatedAtAction(nameof(GetById),product);
             }
             catch (Exception)
             {
@@ -59,7 +77,7 @@ namespace NetCoreWebApiDemo.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id,Product product)
+        public IActionResult Update(int id,ProductSaveDto product)
         {
             try
             {

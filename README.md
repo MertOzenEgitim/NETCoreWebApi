@@ -81,5 +81,19 @@
 * CRUD işlemleri
 * Connection string’i appsettings’ten almak
 * Migration → Database update
+## 8-Paging, Filtering ve Sorting
+* Neden gerekli? 
+* Query parametreleri: ?page=1&pageSize=20, ?sort=-createdAt, ?search=abc
+* TotalCount ve metadata döndürmek
+* Best practice: IQueryable + AsNoTracking
+## 9-DTO ve Automapper
+* Entity vs DTO farkı
+* CreateDto, UpdateDto, ReadDto
+* Overposting Nedir?
+* AutoMapper Nedir? Kurulumu Nasıl Yapılır? Profil Tanımı
+
+
+
+
 
 

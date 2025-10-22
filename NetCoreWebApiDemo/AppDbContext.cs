@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NetCoreWebApiDemo.Models;
+using NetCoreWebApiDemo.Models.Product;
 
 namespace NetCoreWebApiDemo
 {
