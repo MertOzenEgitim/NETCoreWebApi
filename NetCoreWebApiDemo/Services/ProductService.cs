@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NetCoreWebApiDemo.Models;
+using NetCoreWebApiDemo.Models.Product;
 using NetCoreWebApiDemo.Repository;
 using System.Globalization;
 
@@ -8,14 +10,25 @@ namespace NetCoreWebApiDemo.Services
     public class ProductService : IProductService
     {
         private readonly IGenericRepository<Product> _repository;
-        public ProductService(IGenericRepository<Product> repository)
+        private readonly IMapper _mapper;
+        public ProductService(IGenericRepository<Product> repository, IMapper mapper)
         {
-            _repository=repository;
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public void Add(Product product)
+        public void Add(ProductSaveDto product)
         {
-            _repository.Add(product);
+            //Product productEntity = new Product
+            //{
+            //    Name = product.Name,
+            //    Price = product.Price,
+            //    Stock = product.Stock
+            //};
+
+            var productEntity = _mapper.Map<Product>(product);
+
+            _repository.Add(productEntity);
             _repository.Save();
         }
 
@@ -29,9 +42,26 @@ namespace NetCoreWebApiDemo.Services
             _repository.Save();
         }
 
-        public IEnumerable<Product> GetAll()
+        public IEnumerable<ProductDto> GetAll()
         {
-            return _repository.GetAll();
+
+            IEnumerable<Product> products = _repository.GetAll();
+            //List<ProductDto> productList = new List<ProductDto>();
+
+            //foreach (var item in products)
+            //{
+            //    productList.Add(new ProductDto
+            //    {
+            //        Id = item.Id,
+            //        Name = item.Name,
+            //        Stock = item.Stock,
+            //        Price = item.Price
+            //    });
+            //}
+
+            var productList= _mapper.Map<List<ProductDto>>(products);
+
+            return productList;
         }
         public Result<Product> GetPagedFilteredSorted(int page, int pageSize,string? sort,string? search)
         {
@@ -54,22 +84,28 @@ namespace NetCoreWebApiDemo.Services
 
         }
 
-        public Product? GetById(int id)
+        public ProductDto? GetById(int id)
         {
-            return _repository.GetById(id);
+            var entity = _repository.GetById(id);
+
+            var dto= _mapper.Map<ProductDto>(entity);
+
+            return dto;
         }
 
-        public void Update(int id, Product product)
+        public void Update(int id, ProductSaveDto product)
         {
             var currentProduct = _repository.GetById(id);
             if (currentProduct == null)
                 throw new Exception("Ürün bulunamadı");
 
-            currentProduct.Name= product.Name;
-            currentProduct.Price= product.Price;
-            currentProduct.Stock=product.Stock;
+            //currentProduct.Name= product.Name;
+            //currentProduct.Price= product.Price;
+            //currentProduct.Stock=product.Stock;
 
-            _repository.Update(currentProduct);
+            var productEntity = _mapper.Map<Product>(product);
+
+            _repository.Update(productEntity);
             _repository.Save();
         }
         private IQueryable<Product> ApplySorting(IQueryable<Product> query,string? sort)
