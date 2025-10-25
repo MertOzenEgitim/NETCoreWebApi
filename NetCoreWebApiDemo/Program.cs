@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NetCoreWebApiDemo;
+using NetCoreWebApiDemo.Filters;
 using NetCoreWebApiDemo.Profiles;
 using NetCoreWebApiDemo.Repository;
 using NetCoreWebApiDemo.Services;
@@ -8,13 +9,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<MappingProfile>();
 });
+
+builder.Services.AddScoped<ApiKeyAuthorizationFilter>();
+builder.Services.AddScoped<ResourceLogFilter>();
+builder.Services.AddScoped<ActionLogFilter>();
+builder.Services.AddScoped<WrapResponseFilter>();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

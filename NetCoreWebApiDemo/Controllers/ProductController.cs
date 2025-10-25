@@ -2,12 +2,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreWebApiDemo.Filters;
 using NetCoreWebApiDemo.Models.Product;
 using NetCoreWebApiDemo.Services;
 
 namespace NetCoreWebApiDemo.Controllers
 {
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(ApiKeyAuthorizationFilter))]
+    [ServiceFilter(typeof(ResourceLogFilter))]
+    [ServiceFilter(typeof(ActionLogFilter))]
+    //[TypeFilter(typeof(ApiKeyAuthorizationFilter))]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -20,6 +25,7 @@ namespace NetCoreWebApiDemo.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(WrapResponseFilter))]
         public IActionResult GetAll()
         {
             try
@@ -50,16 +56,12 @@ namespace NetCoreWebApiDemo.Controllers
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
-        {
-            try
-            {
-                var product= _productService.GetById(id);
-                return product==null?NotFound():Ok(product);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+        {            
+            if(id<=0)
+            throw new ArgumentException("Geçersiz ID!");
+
+            var product= _productService.GetById(id);
+            return product==null?NotFound():Ok(product);           
         }
 
         [HttpPost]
