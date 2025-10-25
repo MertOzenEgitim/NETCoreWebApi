@@ -91,6 +91,16 @@
 * CreateDto, UpdateDto, ReadDto
 * Overposting Nedir?
 * AutoMapper Nedir? Kurulumu Nasıl Yapılır? Profil Tanımı
+## 10-Filters
+* Filter Türleri
+* * Authorization Filter
+* * Resource Filter 
+* * * Action Filter
+* * * Result Filter
+* * * Exception Filter
+* Filter Kapsamları
+* * Global, Controller ve Action
+* Gerçek Hayat Kıyaslaması (Analoji)
 
 
 
