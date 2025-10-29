@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreWebApiDemo.Exceptions;
 using NetCoreWebApiDemo.Filters;
 using NetCoreWebApiDemo.Models.Product;
 using NetCoreWebApiDemo.Services;
@@ -59,6 +60,9 @@ namespace NetCoreWebApiDemo.Controllers
         {            
             if(id<=0)
             throw new ArgumentException("Geçersiz ID!");
+
+            if (id == 1)
+                throw new NotFoundException("");
 
             var product= _productService.GetById(id);
             return product==null?NotFound():Ok(product);           

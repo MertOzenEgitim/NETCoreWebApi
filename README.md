@@ -101,7 +101,14 @@
 * Filter Kapsamları
 * * Global, Controller ve Action
 * Gerçek Hayat Kıyaslaması (Analoji)
-
+## 11-Global Exception Handling & ProblemDetails
+* Neden Global Exception Handling?
+* Global Exception Filter ve Global Exception Middleware birlikte kullanılır mı?
+* ProblemDetails (RFC7807) Nedir?
+* Custom Exception Middleware
+* Domain Exception → HTTP Status Mapping
+* Development vs Production Ortamı
+* İyileştirme: Trace ID eklemek
 
 
 
