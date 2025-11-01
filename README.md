@@ -109,6 +109,15 @@
 * Domain Exception → HTTP Status Mapping
 * Development vs Production Ortamı
 * İyileştirme: Trace ID eklemek
+## 12-Configuration ve Options Pattern
+* IConfiguration — Temel Okuma Mantığı
+* Ortam Bazlı Konfigürasyon
+* POCO Binding (Strongly Typed Configuration)
+* IOptions — Tip Güvenli Erişim
+* IOptionsSnapshot — Scoped Yeniden Yükleme
+* IOptionsMonitor — Runtime Dinleme
+* Environment Variables
+* Command-Line Arguments
 
 
 
