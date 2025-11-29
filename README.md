@@ -125,6 +125,14 @@
 * Serilog kurulumu (console + file sink)
 * CorrelationId ile log zinciri oluşturma
 * Request bazlı loglama
+## 14-Swagger / OpenAPI
+* Swagger ve OpenAPI nedir?
+* Swagger’a ne oldu? (isim değişikliği/gelişim)
+* AddOpenApi() + MapOpenApi()
+* XML Comments ile dokümantasyon
+* Swashbuckle ile Swagger kurulumu
+* Endpoint açıklamaları, response tipleri
+* Parametre açıklamaları
 
 
 

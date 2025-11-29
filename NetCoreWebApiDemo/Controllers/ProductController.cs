@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetCoreWebApiDemo.Exceptions;
+using NetCoreWebApiDemo.Models;
 using NetCoreWebApiDemo.Models.Product;
 using NetCoreWebApiDemo.Services;
 
 namespace NetCoreWebApiDemo.Controllers
 {
-    [Route("api/[controller]")]    
+    [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
-       private readonly IProductService _productService;
+        private readonly IProductService _productService;
         private readonly ILogger<ProductController> _logger;
 
         public ProductController(IProductService productService, ILogger<ProductController> logger)
@@ -17,8 +18,13 @@ namespace NetCoreWebApiDemo.Controllers
             _productService = productService;
             _logger = logger;
         }
-
+        /// <summary>
+        /// Tüm ürünleri listeler
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ProductDto>), 200)]
+        [ProducesResponseType(typeof(NoData), 400)]
         public IActionResult GetAll()
         {
             try
@@ -47,7 +53,13 @@ namespace NetCoreWebApiDemo.Controllers
                 return BadRequest();
             }
         }
-
+        /// <summary>
+        /// Belirli bir ürünü döner.
+        /// </summary>
+        /// <param name="id">Ürün benzersiz numarası</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="NotFoundException"></exception>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {            
