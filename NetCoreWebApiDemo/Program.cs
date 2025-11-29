@@ -1,20 +1,33 @@
+using CorrelationId;
+using CorrelationId.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using NetCoreWebApiDemo;
-using NetCoreWebApiDemo.Filters;
 using NetCoreWebApiDemo.Middleware;
 using NetCoreWebApiDemo.Models;
 using NetCoreWebApiDemo.Profiles;
 using NetCoreWebApiDemo.Repository;
 using NetCoreWebApiDemo.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//builder.Services.AddControllers(options =>
-//{
-//    options.Filters.Add<GlobalExceptionFilter>();
-//});
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .Enrich.WithCorrelationId()
+    .WriteTo.Console(outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level:u3}] [CID:{CorrelationId}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File("Logs/app-log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+
+builder.Host.UseSerilog();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog();
+
 builder.Services.AddControllers();
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
@@ -28,18 +41,8 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<MappingProfile>();
 });
 
-builder.Services.AddScoped<ApiKeyAuthorizationFilter>();
-builder.Services.AddScoped<ResourceLogFilter>();
-builder.Services.AddScoped<ActionLogFilter>();
-builder.Services.AddScoped<WrapResponseFilter>();
-
 var config = builder.Configuration;
 string connection = config.GetConnectionString("DefaultConnection")??"";
-string appName = config["AppSettings:ApplicationName"]??"";
-string version = config["AppSettings:Version"]??"";
-
-Console.WriteLine(appName);
-Console.WriteLine(version);
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
@@ -47,8 +50,11 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IConfigCompareService, ConfigCompareService>();
-builder.Services.AddSingleton<ConfigMonitorService>();
+
+builder.Services.AddDefaultCorrelationId(options =>
+{
+    options.AddToLoggingScope = true;
+});
 
 var app = builder.Build();
 
@@ -57,10 +63,12 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-_ = app.Services.GetRequiredService<ConfigMonitorService>();
 
 app.UseHttpsRedirection();
+app.UseCorrelationId();
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 

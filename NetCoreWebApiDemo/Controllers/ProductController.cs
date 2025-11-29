@@ -1,36 +1,29 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NetCoreWebApiDemo.Exceptions;
-using NetCoreWebApiDemo.Filters;
 using NetCoreWebApiDemo.Models.Product;
 using NetCoreWebApiDemo.Services;
 
 namespace NetCoreWebApiDemo.Controllers
 {
-    [Route("api/[controller]")]
-    [ServiceFilter(typeof(ApiKeyAuthorizationFilter))]
-    [ServiceFilter(typeof(ResourceLogFilter))]
-    [ServiceFilter(typeof(ActionLogFilter))]
-    //[TypeFilter(typeof(ApiKeyAuthorizationFilter))]
+    [Route("api/[controller]")]    
     [ApiController]
     public class ProductController : ControllerBase
     {
        private readonly IProductService _productService;
-        
+        private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ILogger<ProductController> logger)
         {
-            _productService=productService;
+            _productService = productService;
+            _logger = logger;
         }
 
         [HttpGet]
-        [ServiceFilter(typeof(WrapResponseFilter))]
         public IActionResult GetAll()
         {
             try
             {
+                _logger.LogInformation("GetAll fetched at {time}", DateTime.Now);
                 return Ok(_productService.GetAll());
             }
             catch (Exception)

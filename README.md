@@ -118,6 +118,13 @@
 * IOptionsMonitor — Runtime Dinleme
 * Environment Variables
 * Command-Line Arguments
+## 13-Loglama (Logging)
+* Microsoft.Extensions.Logging temeli
+* Log seviyeleri (Trace → Critical)
+* Log Seviyesi Ayarlama
+* Serilog kurulumu (console + file sink)
+* CorrelationId ile log zinciri oluşturma
+* Request bazlı loglama
 
 
 
