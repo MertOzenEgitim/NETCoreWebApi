@@ -133,6 +133,15 @@
 * Swashbuckle ile Swagger kurulumu
 * Endpoint açıklamaları, response tipleri
 * Parametre açıklamaları
+## 15-JWT Authentication
+* Authentication Nedir?
+* JWT nedir, yapısı (Header, Payload, Signature)
+* JWT Encode-Decoder
+* JWT İmzalama Yöntemleri
+* JWT Validasyonu İçin Temel Kavramlar
+* /api/auth/login endpoint’i ile JWT döndürme
+* Swagger’da “Authorize” butonu ile deneme
+
 
 
 
