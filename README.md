@@ -141,6 +141,13 @@
 * JWT Validasyonu İçin Temel Kavramlar
 * /api/auth/login endpoint’i ile JWT döndürme
 * Swagger’da “Authorize” butonu ile deneme
+## 16-Authorization
+* [Authorize], [AllowAnonymous]
+* Role bazlı yetkilendirme
+* Claim bazlı kurallar
+* Policy bazlı yetkilendirme
+* Custom Authorization Handler
+
 
 
 

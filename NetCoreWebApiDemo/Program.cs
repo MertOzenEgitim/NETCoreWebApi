@@ -1,10 +1,12 @@
 using CorrelationId;
 using CorrelationId.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NetCoreWebApiDemo;
+using NetCoreWebApiDemo.Authorization.Requirement;
 using NetCoreWebApiDemo.Middleware;
 using NetCoreWebApiDemo.Models;
 using NetCoreWebApiDemo.Profiles;
@@ -33,9 +35,24 @@ builder.Host.UseSerilog();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Product", policy => {
+        policy.RequireClaim("product", "true");
+    });
+    options.AddPolicy("AdminProduct", policy => {
+        policy.RequireClaim("product", "true");
+        policy.RequireRole("Admin");
+    });
+    options.AddPolicy("SameCompanyPolicy", policy =>
+    {
+        policy.Requirements.Add(new SameCompanyRequirement());
+    });
+});
 builder.Services.AddControllers();
 builder.Services.AddSingleton<JwtService>();
+builder.Services.AddScoped<IAuthorizationHandler, SameCompanyHandler>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 var env = builder.Environment;
