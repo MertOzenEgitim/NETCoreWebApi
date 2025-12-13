@@ -21,8 +21,13 @@ namespace NetCoreWebApiDemo.Controllers
         {
             if(loginRequest.UserName=="mert" && loginRequest.Password == "12345")
             {
-                var token = _jwtService.GenerateToken("1", loginRequest.UserName);
+                var token = _jwtService.GenerateToken("1", loginRequest.UserName, "1", true);
                 return Ok(new {token});
+            }
+            else if(loginRequest.UserName == "mehmet" && loginRequest.Password == "12345")
+            {
+                var token = _jwtService.GenerateToken("2", loginRequest.UserName,"2", false);
+                return Ok(new { token });
             }
 
             return Unauthorized("Kullanıcı adı veya şifre hatalı"); 

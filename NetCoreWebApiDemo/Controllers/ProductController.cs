@@ -8,6 +8,7 @@ using System.Security.Claims;
 
 namespace NetCoreWebApiDemo.Controllers
 {
+    //[Authorize(Policy = "Product")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -24,16 +25,24 @@ namespace NetCoreWebApiDemo.Controllers
         /// Tüm ürünleri listeler
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Authorize]
+        //[HttpGet]
+        //[Authorize(Roles ="Admin")]
+        //[Authorize(Policy ="Product")]
+        [HttpGet("GetAll/{companyId}")]
+        [Authorize(Policy = "SameCompanyPolicy")]
         [ProducesResponseType(typeof(IEnumerable<ProductDto>), 200)]
         [ProducesResponseType(typeof(NoData), 400)]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int companyId)
         {
             try
             {
                 var userId=User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var userName=User.FindFirstValue("name");
+                //var product=User.FindFirstValue("product");
+
+                //if (product != "true")
+                //    return Forbid();
+
                 _logger.LogInformation("GetAll fetched at {time}", DateTime.Now);
                 return Ok(_productService.GetAll());
             }

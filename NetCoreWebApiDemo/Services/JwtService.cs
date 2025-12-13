@@ -14,7 +14,7 @@ namespace NetCoreWebApiDemo.Services
             _config = config;
         }
 
-        public string GenerateToken(string userId, string name)
+        public string GenerateToken(string userId, string name, string companyId, bool isAdmin=false)
         {
             var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
             var issuer = _config["Jwt:Issuer"];
@@ -25,8 +25,15 @@ namespace NetCoreWebApiDemo.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId),
                 new Claim("name", name),
+                new Claim("companyId", companyId),
                 new Claim(JwtRegisteredClaimNames.Iss, issuer)
             };
+
+            if (isAdmin)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                claims.Add(new Claim("product", "true"));
+            }
 
             var token = new JwtSecurityToken(
                 issuer,
