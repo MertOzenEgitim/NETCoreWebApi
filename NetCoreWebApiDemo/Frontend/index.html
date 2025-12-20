@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>CORS Demo</title>
+</head>
+<body>
+
+    <h2>CORS Demo</h2>
+
+    <button onclick="login()">Login (mert)</button>
+    <button onclick="getProducts()">Ürünleri Getir</button>
+
+    <pre id="output"></pre>
+
+    <script>
+        let accessToken = "";
+
+        function log(message) {
+            document.getElementById("output").innerText += message + "\n";
+        }
+
+        async function login() {
+            log("Login isteği atılıyor...");
+
+            const response = await fetch("http://localhost:5206/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userName: "mert",
+                    password: "12345"
+                })
+            });
+
+            if (!response.ok) {
+                log("Login başarısız");
+                return;
+            }
+
+            const data = await response.json();
+            accessToken = data.token;
+
+            log("Token alındı");
+            log(accessToken);
+        }
+
+        async function getProducts() {
+
+            if (!accessToken) {
+                log("Önce login olmalısın");
+                return;
+            }
+
+            log("Ürünler isteniyor...");
+
+            const response = await fetch(
+                "http://localhost:5206/api/product/GetAll/1",
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                }
+            );
+
+            if (response.status === 401) {
+                log("401 Unauthorized – Token yok/geçersiz");
+                return;
+            }
+
+            if (response.status === 403) {
+                log("403 Forbidden – Policy veya rol engeli");
+                return;
+            }
+
+            const data = await response.json();
+            log("Ürünler başarıyla alındı:");
+            log(JSON.stringify(data, null, 2));
+        }
+    </script>
+
+</body>
+</html>
