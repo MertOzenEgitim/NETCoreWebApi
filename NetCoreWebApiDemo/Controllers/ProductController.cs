@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NetCoreWebApiDemo.Exceptions;
 using NetCoreWebApiDemo.Models;
@@ -9,6 +10,7 @@ using System.Security.Claims;
 namespace NetCoreWebApiDemo.Controllers
 {
     //[Authorize(Policy = "Product")]
+    //[DisableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase

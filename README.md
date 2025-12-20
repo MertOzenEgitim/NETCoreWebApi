@@ -147,6 +147,16 @@
 * Claim bazlı kurallar
 * Policy bazlı yetkilendirme
 * Custom Authorization Handler
+## 17-CORS
+* Same-Origin Policy
+* CORS nedir, neden önemlidir?
+* Preflight mantığı (OPTIONS request)
+* AddCors → policy tanımı
+* Sadece belirli origin’e izin ver
+* Controller bazlı CORS
+* Enpoint bazlı CORS
+* Controller bazlı CORS, Global’i override eder mi?
+* Development vs Production CORS Ayrımı
 
 
 
