@@ -157,6 +157,15 @@
 * Enpoint bazlı CORS
 * Controller bazlı CORS, Global’i override eder mi?
 * Development vs Production CORS Ayrımı
+## 18-Rate Limiting
+* Rate Limiting nedir?
+* Fixed Window
+* Sliding Window
+* Built-in ASP.NET Core Rate Limiter
+* JWT UserId Partitioned Rate Limiting 
+* Global ve Attribute Limiting
+
+
 
 
 
