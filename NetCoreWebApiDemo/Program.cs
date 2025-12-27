@@ -2,6 +2,7 @@ using CorrelationId;
 using CorrelationId.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,7 +15,9 @@ using NetCoreWebApiDemo.Repository;
 using NetCoreWebApiDemo.Services;
 using Serilog;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,6 +110,53 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<MappingProfile>();
 });
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.OnRejected = async (context, token) =>
+    {
+        await context.HttpContext.Response.WriteAsync(
+            "Too many requests. Please retry later.",
+            token);
+    };
+    //options.AddFixedWindowLimiter("fixed", opt =>
+    //{
+    //    opt.PermitLimit = 5;
+    //    opt.Window = TimeSpan.FromSeconds(10);
+    //    opt.QueueLimit = 0;
+    //});
+    options.AddPolicy("user-sliding", context =>
+    {
+        var userId = context.User
+            .FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? context.Connection.RemoteIpAddress?.ToString()
+            ?? "anonymous";
+
+        return RateLimitPartition.GetSlidingWindowLimiter(
+            partitionKey: userId,
+            factory: _ => new SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                SegmentsPerWindow = 4,
+                QueueLimit = 0
+            });
+    });
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    {
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: "global",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 20,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            });
+    });
+});
+
 
 var config = builder.Configuration;
 string connection = config.GetConnectionString("DefaultConnection")??"";
@@ -156,6 +206,7 @@ else
 app.UseCors("DefaultCorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.UseCorrelationId();
 app.UseMiddleware<ExceptionMiddleware>();
 

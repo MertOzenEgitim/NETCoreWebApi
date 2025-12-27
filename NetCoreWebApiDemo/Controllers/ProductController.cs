@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using NetCoreWebApiDemo.Exceptions;
 using NetCoreWebApiDemo.Models;
 using NetCoreWebApiDemo.Models.Product;
@@ -31,6 +32,8 @@ namespace NetCoreWebApiDemo.Controllers
         //[Authorize(Roles ="Admin")]
         //[Authorize(Policy ="Product")]
         [HttpGet("GetAll/{companyId}")]
+        //[EnableRateLimiting("fixed")]
+        [EnableRateLimiting("user-sliding")]
         [Authorize(Policy = "SameCompanyPolicy")]
         [ProducesResponseType(typeof(IEnumerable<ProductDto>), 200)]
         [ProducesResponseType(typeof(NoData), 400)]
