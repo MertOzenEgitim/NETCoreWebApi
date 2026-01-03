@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using NetCoreWebApiDemo.Models;
 using NetCoreWebApiDemo.Models.Product;
 using NetCoreWebApiDemo.Repository;
@@ -11,10 +12,12 @@ namespace NetCoreWebApiDemo.Services
     {
         private readonly IGenericRepository<Product> _repository;
         private readonly IMapper _mapper;
-        public ProductService(IGenericRepository<Product> repository, IMapper mapper)
+        private readonly IMemoryCache _cache;
+        public ProductService(IGenericRepository<Product> repository, IMapper mapper, IMemoryCache cache)
         {
             _repository = repository;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public void Add(ProductSaveDto product)
@@ -86,7 +89,16 @@ namespace NetCoreWebApiDemo.Services
 
         public ProductDto? GetById(int id)
         {
-            var entity = _repository.GetById(id);
+            var key = $"product:{id}";
+
+            var entity= _cache.GetOrCreate(key, entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+                entry.SlidingExpiration = TimeSpan.FromMinutes(1);
+                entry.Priority = CacheItemPriority.High;
+                return _repository.GetById(id);
+            });
+
 
             var dto= _mapper.Map<ProductDto>(entity);
 
@@ -95,18 +107,20 @@ namespace NetCoreWebApiDemo.Services
 
         public void Update(int id, ProductSaveDto product)
         {
+            var key = $"product:{id}";
             var currentProduct = _repository.GetById(id);
             if (currentProduct == null)
                 throw new Exception("Ürün bulunamadı");
 
-            //currentProduct.Name= product.Name;
-            //currentProduct.Price= product.Price;
-            //currentProduct.Stock=product.Stock;
+            currentProduct.Name= product.Name;
+            currentProduct.Price= product.Price;
+            currentProduct.Stock=product.Stock;
 
-            var productEntity = _mapper.Map<Product>(product);
+            var productEntity = _mapper.Map<Product>(currentProduct);
 
             _repository.Update(productEntity);
             _repository.Save();
+            _cache.Remove(key);
         }
         private IQueryable<Product> ApplySorting(IQueryable<Product> query,string? sort)
         {
