@@ -157,6 +157,7 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
+builder.Services.AddMemoryCache();
 
 var config = builder.Configuration;
 string connection = config.GetConnectionString("DefaultConnection")??"";

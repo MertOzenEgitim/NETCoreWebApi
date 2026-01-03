@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Caching.Memory;
 using NetCoreWebApiDemo.Exceptions;
 using NetCoreWebApiDemo.Models;
 using NetCoreWebApiDemo.Models.Product;
@@ -82,11 +83,11 @@ namespace NetCoreWebApiDemo.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {            
-            if(id<=0)
-            throw new ArgumentException("Geçersiz ID!");
+            //if(id<=0)
+            //throw new ArgumentException("Geçersiz ID!");
 
-            if (id == 1)
-                throw new NotFoundException("");
+            //if (id == 1)
+            //    throw new NotFoundException("");
 
             var product= _productService.GetById(id);
             return product==null?NotFound():Ok(product);           

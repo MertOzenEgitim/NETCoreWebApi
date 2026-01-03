@@ -164,6 +164,17 @@
 * Built-in ASP.NET Core Rate Limiter
 * JWT UserId Partitioned Rate Limiting 
 * Global ve Attribute Limiting
+## 19-Caching
+* Caching Nedir, Neyi Çözer?
+* Metrikler: Latency, Throughput, RPS Nedir?
+* Neyi Cache’lemek Mantıklı?
+* Cache Türleri
+* * Response Caching
+* * Output Caching
+* * Memory Cache 
+* * IDistributedCache (Redis vs.)
+* Invalidation: Update/Delete Sonrası Temizleme
+* Cache Stampede (Thundering Herd) Nedir?
 
 
 
