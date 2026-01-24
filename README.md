@@ -175,6 +175,13 @@
 * * IDistributedCache (Redis vs.)
 * Invalidation: Update/Delete Sonrası Temizleme
 * Cache Stampede (Thundering Herd) Nedir?
+## 20-File Upload & Download
+* Buffered vs Streaming vs Chunked (Upload/Download)
+* Limitler + güvenlik
+* CancellationToken mantığı
+* Download + Range Requests (Resume)
+* Demo: Basit API → upload/download/range testleri (Postman)
+
 
 
 

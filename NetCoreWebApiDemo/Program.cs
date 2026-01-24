@@ -2,6 +2,7 @@ using CorrelationId;
 using CorrelationId.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -63,6 +64,20 @@ builder.Services.AddAuthorization(options =>
     });
 });
 builder.Services.AddControllers();
+
+builder.WebHost.ConfigureKestrel(o =>
+{
+    o.Limits.MaxRequestBodySize = 200_000_000; // 200MB
+});
+
+builder.Services.Configure<FormOptions>(o =>
+{
+    o.MultipartBodyLengthLimit = 200_000_000;
+    o.ValueLengthLimit = 1 * 1024 * 1024;       // 1MB
+    o.MultipartHeadersLengthLimit = 64 * 1024;  // 64KB
+});
+
+
 builder.Services.AddSingleton<JwtService>();
 builder.Services.AddScoped<IAuthorizationHandler, SameCompanyHandler>();
 builder.Services.AddHttpContextAccessor();
