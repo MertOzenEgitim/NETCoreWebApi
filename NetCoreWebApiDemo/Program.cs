@@ -1,10 +1,13 @@
 using CorrelationId;
 using CorrelationId.DependencyInjection;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NetCoreWebApiDemo;
@@ -189,6 +192,14 @@ builder.Services.AddDefaultCorrelationId(options =>
     options.AddToLoggingScope = true;
 });
 
+builder.Services.AddHealthChecks()
+    .AddSqlServer(
+    connectionString: connection,
+    name: "sqlserver",
+    failureStatus: HealthStatus.Unhealthy,
+    timeout: TimeSpan.FromSeconds(3))
+    .AddCheck<CriticalConfigHealthCheck>("critical_config"); 
+
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -208,6 +219,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 
 var app = builder.Build();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy]=StatusCodes.Status200OK,
+        [HealthStatus.Degraded]=StatusCodes.Status200OK,
+        [HealthStatus.Degraded]=StatusCodes.Status503ServiceUnavailable
+    },
+    ResponseWriter=UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
