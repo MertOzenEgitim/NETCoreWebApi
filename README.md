@@ -181,6 +181,13 @@
 * CancellationToken mantığı
 * Download + Range Requests (Resume)
 * Demo: Basit API → upload/download/range testleri (Postman)
+## 21-Health Checks
+* Health Checks Nedir?
+* HealthStatus
+* Health Check Middleware
+* Uygulama: DB bağlantısı düşerse “Unhealthy” dönmek
+* /health endpoint’i
+* Custom Health Check
 
 
 
