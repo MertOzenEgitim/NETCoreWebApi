@@ -188,6 +188,32 @@
 * Uygulama: DB bağlantısı düşerse “Unhealthy” dönmek
 * /health endpoint’i
 * Custom Health Check
+## 22-API Versioning
+* API Versioning neden gerekli?
+* * Breaking change nedir, ne zaman sürüm kırılır?
+* * “Major/Minor/Patch” mantığı (semver) ve API’ye etkisi
+* Sürümleme stratejileri
+* * URL segment (/api/v{version}/...)
+* * Query string (?api-version=1.0)
+* * Header (custom header)
+* * Strateji seçimi: artılar/eksiler, takım standardı
+* Versiyonlama kuralları ve politika
+* * Backward compatibility
+* * Deprecation / Sunset yaklaşımı
+* * Default version ve “assume default version” davranışı
+* Version negotiation nasıl çalışır?
+* * Versiyon nasıl okunur? 
+* * Versiyon belirsiz/çakışmalıysa ne olur?
+* * Versiyon yoksa ne olur? 
+* Controller bazlı versiyonlama
+* * [ApiVersion], [Route] ile URL segment
+* * [MapToApiVersion] ile action bazlı ayrıştırma
+* * Deprecated = true işaretleme
+* Swagger / OpenAPI tarafı
+* * Swagger’da versiyon grupları (v1, v2)
+* * Aynı endpoint çakışmalarını çözme
+* * Dokümantasyon/örnek istekler
+
 
 
 
