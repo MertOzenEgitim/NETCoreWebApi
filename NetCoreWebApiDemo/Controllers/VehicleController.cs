@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreWebApiDemo.Models;
 
 namespace NetCoreWebApiDemo.Controllers
 {
@@ -19,6 +20,6 @@ namespace NetCoreWebApiDemo.Controllers
         [HttpGet]
         [MapToApiVersion("2.0")]
         public IActionResult GetV2()
-            => Ok(new[] { new { id = 1, plate = "34 MRT 95", driver = "Mert Özen"} });
+            => Ok(new[] { new Vehicle { Id = 1, DriverName = "Mert Özen", Plate = null } });
     }
 }
